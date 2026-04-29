@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +38,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -59,19 +59,12 @@ internal fun AddItemInput(
 
     var value by remember { mutableStateOf("") }
     var commentValue by remember { mutableStateOf("") }
-    // Incrementing this forces BasicTextField to remount, flushing the IME buffer
     var fieldResetKey by remember { mutableIntStateOf(0) }
 
-    fun submitAndClear() {
-        val title = value.trim()
-        if (title.isNotEmpty()) {
-            val capturedComment = commentValue
-            value = ""
-            commentValue = ""
-            fieldResetKey++
-            onSubmit(title, capturedComment)
-        }
-    }
+    // Always reflects the latest value in callbacks, avoiding stale closure captures
+    val currentValue by rememberUpdatedState(value)
+    val currentComment by rememberUpdatedState(commentValue)
+    val currentOnSubmit by rememberUpdatedState(onSubmit)
 
     Column(
         modifier = modifier,
@@ -100,7 +93,14 @@ internal fun AddItemInput(
                     Icon(imageVector = Icons.Default.Add, contentDescription = null)
                 },
                 onKeyboardDoneInput = {
-                    submitAndClear()
+                    val title = currentValue.trim()
+                    if (title.isNotEmpty()) {
+                        val comment = currentComment
+                        value = ""
+                        commentValue = ""
+                        fieldResetKey++
+                        currentOnSubmit(title, comment)
+                    }
                     view.playSoundEffect(SoundEffectConstants.CLICK)
                 },
                 trailingIcon = {
@@ -110,7 +110,14 @@ internal fun AddItemInput(
                                 .alpha(animatedSubmitAlpha)
                                 .testTag(TestTags.AddItemInputSubmitButton),
                             onClick = {
-                                submitAndClear()
+                                val title = currentValue.trim()
+                                if (title.isNotEmpty()) {
+                                    val comment = currentComment
+                                    value = ""
+                                    commentValue = ""
+                                    fieldResetKey++
+                                    currentOnSubmit(title, comment)
+                                }
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                             },
                         ) {
