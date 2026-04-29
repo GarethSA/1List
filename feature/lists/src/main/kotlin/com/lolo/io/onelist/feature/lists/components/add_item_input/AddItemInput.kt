@@ -52,19 +52,25 @@ import com.lolo.io.onelist.feature.lists.components.core.OneListTextField
 
 @Composable
 internal fun AddItemInput(
-    value: String,
-    onValueChange: (String) -> Unit,
+    onSubmit: (title: String, comment: String) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier,
-    commentValue: String = "",
-    onCommentValueChange: (String) -> Unit = {},
-    onSubmit: () -> Unit = {},
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val view = LocalView.current
 
-    val focusRequester = remember {
-        FocusRequester()
+    val focusRequester = remember { FocusRequester() }
+
+    var value by remember { mutableStateOf("") }
+    var commentValue by remember { mutableStateOf("") }
+
+    fun submitAndClear() {
+        val title = value.trim()
+        if (title.isNotEmpty()) {
+            value = ""
+            commentValue = ""
+            onSubmit(title, commentValue)
+        }
     }
 
     Column(
@@ -74,9 +80,7 @@ internal fun AddItemInput(
 
         val iconsAnimationDuration = 300
 
-        var showCommentInput by remember {
-            mutableStateOf(false)
-        }
+        var showCommentInput by remember { mutableStateOf(false) }
 
         val animatedSubmitAlpha by animateFloatAsState(
             targetValue = if (value.isEmpty()) 0f else 1f,
@@ -86,7 +90,6 @@ internal fun AddItemInput(
             ), label = ""
         )
 
-
         OneListTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -94,18 +97,13 @@ internal fun AddItemInput(
                 .testTag(TestTags.AddItemInput),
             value = value,
             placeholder = stringResource(R.string.add_item_placeholder),
-            onValueChange = onValueChange,
+            onValueChange = { value = it },
             singleLine = true,
             leadingIcon = {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             },
             onKeyboardDoneInput = {
-                if (value.isNotEmpty()) {
-                    onSubmit()
-                    onValueChange("")
-                } else {
-                    keyboardController?.hide()
-                }
+                submitAndClear()
                 view.playSoundEffect(SoundEffectConstants.CLICK)
             },
             trailingIcon = {
@@ -116,7 +114,7 @@ internal fun AddItemInput(
                                 .alpha(animatedSubmitAlpha)
                                 .testTag(TestTags.AddItemInputSubmitButton),
                             onClick = {
-                                onSubmit()
+                                submitAndClear()
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                 focusRequester.requestFocus()
                             },
@@ -144,7 +142,6 @@ internal fun AddItemInput(
                     ), label = ""
                 )
 
-
                 OneListTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -152,9 +149,7 @@ internal fun AddItemInput(
                         .testTag(TestTags.AddItemCommentInput),
                     value = commentValue,
                     placeholder = stringResource(R.string.add_comment_placeholder),
-                    onValueChange = {
-                        onCommentValueChange(it)
-                    },
+                    onValueChange = { commentValue = it },
                     leadingIcon = {
                         Icon(
                             modifier = Modifier.rotate(90f),
@@ -167,7 +162,7 @@ internal fun AddItemInput(
                             IconButton(
                                 modifier = Modifier.alpha(animatedClearCommentAlpha),
                                 onClick = {
-                                    onCommentValueChange("")
+                                    commentValue = ""
                                     view.playSoundEffect(SoundEffectConstants.CLICK)
                                 }) {
                                 Icon(
@@ -181,17 +176,14 @@ internal fun AddItemInput(
             }
         }
 
-
-        var arrowRotation by remember {
-            mutableFloatStateOf(180f)
-        }
+        var arrowRotation by remember { mutableFloatStateOf(180f) }
 
         val showCommentArrow by remember(value) {
             derivedStateOf { value.isNotEmpty() || showCommentInput || commentValue.isNotEmpty() }
         }
 
         val animatedArrowVisibility by animateFloatAsState(
-            targetValue = if(showCommentArrow) 1f else 0f,
+            targetValue = if (showCommentArrow) 1f else 0f,
             animationSpec = tween(
                 durationMillis = iconsAnimationDuration,
                 easing = FastOutSlowInEasing
@@ -213,7 +205,6 @@ internal fun AddItemInput(
             enabled = showCommentArrow,
             contentPadding = PaddingValues(0.dp)
         ) {
-
             val animatedArrowRotation by animateFloatAsState(
                 targetValue = arrowRotation,
                 animationSpec = tween(
@@ -231,22 +222,14 @@ internal fun AddItemInput(
                 colorFilter = ColorFilter.tint(MaterialTheme.appColors.addItemCommentArrow)
             )
         }
-
     }
-
 }
 
 @Preview
 @Composable
 private fun Preview_AddItemInput() = ThemedPreview {
-    var text by remember { mutableStateOf("Preview text") }
-    var comment by remember { mutableStateOf("") }
     AddItemInput(
-        value = text,
-        onValueChange = { text = it },
-        commentValue = comment,
-        onCommentValueChange = { comment = it },
-        onSubmit = { showPreviewDialog("Submit") },
+        onSubmit = { _, _ -> },
         modifier = Modifier.fillMaxWidth(),
     )
 }
