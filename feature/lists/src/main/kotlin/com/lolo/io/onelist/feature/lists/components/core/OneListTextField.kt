@@ -19,9 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -47,26 +45,14 @@ internal fun OneListTextField(
     var lineCount by remember { mutableIntStateOf(0) }
     var singleLineFix by remember { mutableStateOf(false) }
 
-    var textFieldValueState by remember {
-        mutableStateOf(TextFieldValue(value, selection = TextRange(Int.MAX_VALUE)))
-    }
-
-    // Keep internal state in sync with external value
-    if (textFieldValueState.text != value) {
-        textFieldValueState = TextFieldValue(value, selection = TextRange(value.length))
-    }
-
     BasicTextField(
         modifier = modifier
             .ifThen(showBorder) {
                 border(width = 1.dp, color = MaterialTheme.appColors.textFieldBorder, borderShape)
             }
             .heightIn(36.dp, if (lineCount <= 1) 36.dp else Dp.Unspecified),
-        value = textFieldValueState,
-        onValueChange = {
-            textFieldValueState = it
-            onValueChange(it.text)
-        },
+        value = value,
+        onValueChange = onValueChange,
         textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.appColors.textFieldText),
         interactionSource = interactionSource,
         singleLine = singleLine,
