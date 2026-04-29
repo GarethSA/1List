@@ -25,7 +25,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,8 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -55,21 +55,21 @@ internal fun AddItemInput(
     onSubmit: (title: String, comment: String) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier,
 ) {
-
-    val keyboardController = LocalSoftwareKeyboardController.current
     val view = LocalView.current
-
-    val focusRequester = remember { FocusRequester() }
 
     var value by remember { mutableStateOf("") }
     var commentValue by remember { mutableStateOf("") }
+    // Incrementing this forces BasicTextField to remount, flushing the IME buffer
+    var fieldResetKey by remember { mutableIntStateOf(0) }
 
     fun submitAndClear() {
         val title = value.trim()
         if (title.isNotEmpty()) {
+            val capturedComment = commentValue
             value = ""
             commentValue = ""
-            onSubmit(title, commentValue)
+            fieldResetKey++
+            onSubmit(title, capturedComment)
         }
     }
 
@@ -79,36 +79,32 @@ internal fun AddItemInput(
     ) {
 
         val iconsAnimationDuration = 300
-
         var showCommentInput by remember { mutableStateOf(false) }
 
         val animatedSubmitAlpha by animateFloatAsState(
             targetValue = if (value.isEmpty()) 0f else 1f,
-            animationSpec = tween(
-                durationMillis = iconsAnimationDuration,
-                easing = FastOutSlowInEasing
-            ), label = ""
+            animationSpec = tween(durationMillis = iconsAnimationDuration, easing = FastOutSlowInEasing),
+            label = ""
         )
 
-        OneListTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester)
-                .testTag(TestTags.AddItemInput),
-            value = value,
-            placeholder = stringResource(R.string.add_item_placeholder),
-            onValueChange = { value = it },
-            singleLine = true,
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
-            },
-            onKeyboardDoneInput = {
-                submitAndClear()
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-            },
-            trailingIcon = {
-                if (value.isNotEmpty()) {
-                    if (animatedSubmitAlpha > 0) {
+        key(fieldResetKey) {
+            OneListTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(TestTags.AddItemInput),
+                value = value,
+                placeholder = stringResource(R.string.add_item_placeholder),
+                onValueChange = { value = it },
+                singleLine = true,
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                },
+                onKeyboardDoneInput = {
+                    submitAndClear()
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                },
+                trailingIcon = {
+                    if (value.isNotEmpty() && animatedSubmitAlpha > 0) {
                         IconButton(
                             modifier = Modifier
                                 .alpha(animatedSubmitAlpha)
@@ -116,7 +112,6 @@ internal fun AddItemInput(
                             onClick = {
                                 submitAndClear()
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
-                                focusRequester.requestFocus()
                             },
                         ) {
                             Icon(
@@ -126,20 +121,17 @@ internal fun AddItemInput(
                             )
                         }
                     }
-                }
-            },
-        )
-        AnimatedVisibility(
-            visible = showCommentInput
-        ) {
+                },
+            )
+        }
+
+        AnimatedVisibility(visible = showCommentInput) {
             Box(Modifier.padding(start = MaterialTheme.space.Normal)) {
 
                 val animatedClearCommentAlpha by animateFloatAsState(
                     targetValue = if (commentValue.isEmpty()) 0f else 1f,
-                    animationSpec = tween(
-                        durationMillis = iconsAnimationDuration,
-                        easing = FastOutSlowInEasing
-                    ), label = ""
+                    animationSpec = tween(durationMillis = iconsAnimationDuration, easing = FastOutSlowInEasing),
+                    label = ""
                 )
 
                 OneListTextField(
@@ -184,10 +176,8 @@ internal fun AddItemInput(
 
         val animatedArrowVisibility by animateFloatAsState(
             targetValue = if (showCommentArrow) 1f else 0f,
-            animationSpec = tween(
-                durationMillis = iconsAnimationDuration,
-                easing = FastOutSlowInEasing
-            ), label = ""
+            animationSpec = tween(durationMillis = iconsAnimationDuration, easing = FastOutSlowInEasing),
+            label = ""
         )
 
         TextButton(
@@ -207,10 +197,8 @@ internal fun AddItemInput(
         ) {
             val animatedArrowRotation by animateFloatAsState(
                 targetValue = arrowRotation,
-                animationSpec = tween(
-                    durationMillis = iconsAnimationDuration,
-                    easing = FastOutSlowInEasing
-                ), label = ""
+                animationSpec = tween(durationMillis = iconsAnimationDuration, easing = FastOutSlowInEasing),
+                label = ""
             )
             Image(
                 modifier = Modifier
