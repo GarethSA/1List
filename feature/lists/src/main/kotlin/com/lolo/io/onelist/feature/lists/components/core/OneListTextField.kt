@@ -11,7 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -58,10 +57,9 @@ internal fun OneListTextField(
         )
     }
 
-    LaunchedEffect(value) {
-        if(value.isEmpty()) {
-            textFieldValueState = TextFieldValue(value, selection = TextRange.Zero)
-        }
+    // Sync internal state immediately when external value is cleared
+    if (value.isEmpty() && textFieldValueState.text.isNotEmpty()) {
+        textFieldValueState = TextFieldValue("", selection = TextRange.Zero)
     }
 
     BasicTextField(
