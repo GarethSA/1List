@@ -57,11 +57,6 @@ internal fun OneListTextField(
         )
     }
 
-    // Sync internal state immediately when external value is cleared
-    if (value.isEmpty() && textFieldValueState.text.isNotEmpty()) {
-        textFieldValueState = TextFieldValue("", selection = TextRange.Zero)
-    }
-
     BasicTextField(
         modifier = modifier
             .ifThen(showBorder) {
@@ -89,9 +84,11 @@ internal fun OneListTextField(
                 it.lineCount <= 1
             } else singleLine
         },
-
         keyboardActions = KeyboardActions(
-            onDone = { onKeyboardDoneInput() }
+            onDone = {
+                textFieldValueState = TextFieldValue("", selection = TextRange.Zero)
+                onKeyboardDoneInput()
+            }
         ),
         cursorBrush = SolidColor(MaterialTheme.appColors.textFieldCursor),
     ) { innerTextField ->
