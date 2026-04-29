@@ -102,6 +102,7 @@ internal fun AddItemInput(
             onKeyboardDoneInput = {
                 if (value.isNotEmpty()) {
                     onSubmit()
+                    onValueChange("")
                 } else {
                     keyboardController?.hide()
                 }
