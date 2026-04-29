@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
@@ -57,6 +59,11 @@ internal fun OneListTextField(
         )
     }
 
+    // Always keep internal state in sync with external value
+    if (textFieldValueState.text != value) {
+        textFieldValueState = TextFieldValue(value, selection = TextRange(value.length))
+    }
+
     BasicTextField(
         modifier = modifier
             .ifThen(showBorder) {
@@ -84,11 +91,9 @@ internal fun OneListTextField(
                 it.lineCount <= 1
             } else singleLine
         },
+        keyboardOptions = if (singleLine) KeyboardOptions(imeAction = ImeAction.Done) else KeyboardOptions.Default,
         keyboardActions = KeyboardActions(
-            onDone = {
-                textFieldValueState = TextFieldValue("", selection = TextRange.Zero)
-                onKeyboardDoneInput()
-            }
+            onDone = { onKeyboardDoneInput() }
         ),
         cursorBrush = SolidColor(MaterialTheme.appColors.textFieldCursor),
     ) { innerTextField ->
