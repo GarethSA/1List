@@ -18,6 +18,7 @@ dependencies {
     api(libs.androidx.lifecycle.viewmodel.compose)
     api (libs.androidx.navigation.compose)
     api (libs.androidx.compose.runtime)
+    api(libs.androidx.compose.google.fonts)
 
     // compose: ui tests
     api(libs.androidx.compose.ui.test.junit4)
