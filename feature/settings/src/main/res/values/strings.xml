@@ -23,4 +23,6 @@
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_dynamic">Dynamic (Based on your wallpaper)</string>
+    <string name="settings_font_size">Font Size</string>
+    <string name="settings_font_family">Font Style</string>
 </resources>
