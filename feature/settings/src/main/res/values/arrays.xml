@@ -8,4 +8,30 @@
         <item>Light</item>
         <item>Dark</item>
     </string-array>
+    <string-array name="font_size_values">
+        <item>small</item>
+        <item>medium</item>
+        <item>large</item>
+    </string-array>
+    <string-array name="font_size_labels">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+    <string-array name="font_family_values">
+        <item>default</item>
+        <item>roboto</item>
+        <item>lato</item>
+        <item>opensans</item>
+        <item>montserrat</item>
+        <item>raleway</item>
+    </string-array>
+    <string-array name="font_family_labels">
+        <item>Default (System)</item>
+        <item>Roboto</item>
+        <item>Lato</item>
+        <item>Open Sans</item>
+        <item>Montserrat</item>
+        <item>Raleway</item>
+    </string-array>
 </resources>
