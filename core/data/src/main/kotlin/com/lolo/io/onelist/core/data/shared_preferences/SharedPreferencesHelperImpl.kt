@@ -78,13 +78,29 @@ class SharedPreferencesHelperImpl(
     private val _selectedListIndexStateFlow = MutableStateFlow(selectedListIndex)
     override val selectedListIndexStateFlow = _selectedListIndexStateFlow.asStateFlow()
 
+    private val _fontSizeStateFlow = MutableStateFlow(
+        getPref(SharedPreferencesHelper.FONT_SIZE_PREF) ?: SharedPreferencesHelper.FONT_SIZE_MEDIUM
+    )
+    override val fontSizeStateFlow = _fontSizeStateFlow.asStateFlow()
+
+    private val _fontFamilyStateFlow = MutableStateFlow(
+        getPref(SharedPreferencesHelper.FONT_FAMILY_PREF) ?: SharedPreferencesHelper.FONT_FAMILY_DEFAULT
+    )
+    override val fontFamilyStateFlow = _fontFamilyStateFlow.asStateFlow()
+
     override var fontSize: String
         get() = getPref(SharedPreferencesHelper.FONT_SIZE_PREF) ?: SharedPreferencesHelper.FONT_SIZE_MEDIUM
-        set(value) = editPref(SharedPreferencesHelper.FONT_SIZE_PREF, value)
+        set(value) {
+            editPref(SharedPreferencesHelper.FONT_SIZE_PREF, value)
+            _fontSizeStateFlow.value = value
+        }
 
     override var fontFamily: String
         get() = getPref(SharedPreferencesHelper.FONT_FAMILY_PREF) ?: SharedPreferencesHelper.FONT_FAMILY_DEFAULT
-        set(value) = editPref(SharedPreferencesHelper.FONT_FAMILY_PREF, value)
+        set(value) {
+            editPref(SharedPreferencesHelper.FONT_FAMILY_PREF, value)
+            _fontFamilyStateFlow.value = value
+        }
 
     override val canAccessBackupUri
         get() = backupUri?.let {
