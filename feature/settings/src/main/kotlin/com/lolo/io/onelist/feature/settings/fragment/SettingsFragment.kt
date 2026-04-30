@@ -106,7 +106,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         onSharedPreferenceChangeListener =
             OnSharedPreferenceChangeListener { _, key ->
                 when (key) {
-                    SharedPreferencesHelper.THEME_PREF -> activity?.recreate()
+                    SharedPreferencesHelper.THEME_PREF,
+                    SharedPreferencesHelper.FONT_SIZE_PREF,
+                    SharedPreferencesHelper.FONT_FAMILY_PREF -> activity?.recreate()
                 }
             }
 
@@ -234,4 +236,3 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 }
-
