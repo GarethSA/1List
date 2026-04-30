@@ -11,6 +11,20 @@
             android:key="theme"
             android:title="Theme"
             app:useSimpleSummaryProvider="true" />
+        <DropDownPreference
+            android:entries="@array/font_size_labels"
+            android:entryValues="@array/font_size_values"
+            android:icon="@drawable/ic_settings_color_palette_24dp"
+            android:key="fontSize"
+            android:title="@string/settings_font_size"
+            app:useSimpleSummaryProvider="true" />
+        <DropDownPreference
+            android:entries="@array/font_family_labels"
+            android:entryValues="@array/font_family_values"
+            android:icon="@drawable/ic_settings_color_palette_24dp"
+            android:key="fontFamily"
+            android:title="@string/settings_font_family"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="cat_backup"
