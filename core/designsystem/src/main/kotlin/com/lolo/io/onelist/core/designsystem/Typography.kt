@@ -4,48 +4,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.googlefonts.Font
-import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 
-private val provider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
-)
-
-private fun googleFontFamily(name: String): FontFamily {
-    val font = GoogleFont(name)
-    return FontFamily(
-        Font(googleFont = font, fontProvider = provider, weight = FontWeight.Normal),
-        Font(googleFont = font, fontProvider = provider, weight = FontWeight.Bold),
-        Font(googleFont = font, fontProvider = provider, style = FontStyle.Italic),
-    )
-}
+val RobotoFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal))
+val LatoFamily = FontFamily(Font(R.font.lato_regular, FontWeight.Normal))
+val OpenSansFamily = FontFamily(Font(R.font.opensans_regular, FontWeight.Normal))
+val MontserratFamily = FontFamily(Font(R.font.montserrat_regular, FontWeight.Normal))
+val RalewayFamily = FontFamily(Font(R.font.raleway_regular, FontWeight.Normal))
 
 fun resolveFontFamily(fontPref: String): FontFamily = when (fontPref) {
-    "roboto"      -> googleFontFamily("Roboto")
-    "lato"        -> googleFontFamily("Lato")
-    "opensans"    -> googleFontFamily("Open Sans")
-    "montserrat"  -> googleFontFamily("Montserrat")
-    "raleway"     -> googleFontFamily("Raleway")
-    else          -> FontFamily.Default
+    "roboto"     -> RobotoFamily
+    "lato"       -> LatoFamily
+    "opensans"   -> OpenSansFamily
+    "montserrat" -> MontserratFamily
+    "raleway"    -> RalewayFamily
+    else         -> FontFamily.Default
 }
 
 fun resolveFontSize(sizePref: String) = when (sizePref) {
-    "small"  -> 13.sp
-    "large"  -> 20.sp
-    else     -> 16.sp // medium
-}
-
-fun resolveCommentFontSize(sizePref: String) = when (sizePref) {
-    "small"  -> 10.sp
-    "large"  -> 15.sp
-    else     -> 12.sp
+    "small" -> 13.sp
+    "large" -> 20.sp
+    else    -> 16.sp
 }
 
 @Composable
@@ -78,15 +62,10 @@ fun appTypography(): AppTypography {
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     )
-
     return AppTypography(
         itemTitle = MaterialTheme.typography.bodyLarge,
         itemComment = itemComment,
-        itemTitleDone = MaterialTheme.typography.bodyLarge.copy(
-            textDecoration = TextDecoration.LineThrough
-        ),
-        itemCommentDone = itemComment.copy(
-            textDecoration = TextDecoration.LineThrough
-        ),
+        itemTitleDone = MaterialTheme.typography.bodyLarge.copy(textDecoration = TextDecoration.LineThrough),
+        itemCommentDone = itemComment.copy(textDecoration = TextDecoration.LineThrough),
     )
 }
