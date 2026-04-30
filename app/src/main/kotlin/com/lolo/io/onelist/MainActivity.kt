@@ -84,10 +84,13 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+                val currentFontSize = sharedPreferencesHelper.fontSizeStateFlow.collectAsStateWithLifecycle().value
+                val currentFontFamily = sharedPreferencesHelper.fontFamilyStateFlow.collectAsStateWithLifecycle().value
+
                 OneListTheme(
                     isDynamic = sharedPreferencesHelper.theme == SharedPreferencesHelper.THEME_DYNAMIC,
-                    fontSizePref = sharedPreferencesHelper.fontSize,
-                    fontFamilyPref = sharedPreferencesHelper.fontFamily
+                    fontSizePref = currentFontSize,
+                    fontFamilyPref = currentFontFamily
                 ) {
                     Surface(modifier = Modifier.fillMaxSize()) {
                         Surface(
