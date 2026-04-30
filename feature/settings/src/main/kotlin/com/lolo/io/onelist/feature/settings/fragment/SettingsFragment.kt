@@ -104,11 +104,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         onSharedPreferenceChangeListener =
-            OnSharedPreferenceChangeListener { _, key ->
+            OnSharedPreferenceChangeListener { sharedPrefs, key ->
                 when (key) {
-                    SharedPreferencesHelper.THEME_PREF,
-                    SharedPreferencesHelper.FONT_SIZE_PREF,
-                    SharedPreferencesHelper.FONT_FAMILY_PREF -> activity?.recreate()
+                    SharedPreferencesHelper.THEME_PREF -> activity?.recreate()
+                    SharedPreferencesHelper.FONT_SIZE_PREF -> {
+                        val value = sharedPrefs.getString(key, SharedPreferencesHelper.FONT_SIZE_MEDIUM)
+                            ?: SharedPreferencesHelper.FONT_SIZE_MEDIUM
+                        viewModel.updateFontSize(value)
+                    }
+                    SharedPreferencesHelper.FONT_FAMILY_PREF -> {
+                        val value = sharedPrefs.getString(key, SharedPreferencesHelper.FONT_FAMILY_DEFAULT)
+                            ?: SharedPreferencesHelper.FONT_FAMILY_DEFAULT
+                        viewModel.updateFontFamily(value)
+                    }
                 }
             }
 
