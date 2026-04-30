@@ -11,6 +11,8 @@ object Palette {
     val NAVY_LIGHT = Color(0xFF2E5FA3)
     val PURE_WHITE = Color(0xFFFFFFFF)
     val PURE_BLACK = Color(0xFF000000)
+    val OFF_BLACK = Color(0xFF111111)
+    val SURFACE_BLACK = Color(0xFF1A1A1A)
     val GRAY_DARK = Color(0xFF555555)
     val GRAY = Color(0xFF888888)
     val GRAY_LIGHT = Color(0xFFCDCDCD)
