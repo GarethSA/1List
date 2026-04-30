@@ -84,7 +84,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                OneListTheme(isDynamic = sharedPreferencesHelper.theme == SharedPreferencesHelper.THEME_DYNAMIC) {
+                OneListTheme(
+                    isDynamic = sharedPreferencesHelper.theme == SharedPreferencesHelper.THEME_DYNAMIC,
+                    fontSizePref = sharedPreferencesHelper.fontSize,
+                    fontFamilyPref = sharedPreferencesHelper.fontFamily
+                ) {
                     Surface(modifier = Modifier.fillMaxSize()) {
                         Surface(
                             modifier = Modifier
@@ -165,4 +169,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
