@@ -78,6 +78,14 @@ class SharedPreferencesHelperImpl(
     private val _selectedListIndexStateFlow = MutableStateFlow(selectedListIndex)
     override val selectedListIndexStateFlow = _selectedListIndexStateFlow.asStateFlow()
 
+    override var fontSize: String
+        get() = getPref(SharedPreferencesHelper.FONT_SIZE_PREF) ?: SharedPreferencesHelper.FONT_SIZE_MEDIUM
+        set(value) = editPref(SharedPreferencesHelper.FONT_SIZE_PREF, value)
+
+    override var fontFamily: String
+        get() = getPref(SharedPreferencesHelper.FONT_FAMILY_PREF) ?: SharedPreferencesHelper.FONT_FAMILY_DEFAULT
+        set(value) = editPref(SharedPreferencesHelper.FONT_FAMILY_PREF, value)
+
     override val canAccessBackupUri
         get() = backupUri?.let {
             DocumentFileCompat.fromUri(app, Uri.parse(it))?.canWrite() ?: false
