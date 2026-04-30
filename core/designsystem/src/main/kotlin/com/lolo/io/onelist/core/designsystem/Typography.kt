@@ -11,19 +11,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 
-val RobotoFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal))
-val LatoFamily = FontFamily(Font(R.font.lato_regular, FontWeight.Normal))
-val OpenSansFamily = FontFamily(Font(R.font.opensans_regular, FontWeight.Normal))
-val MontserratFamily = FontFamily(Font(R.font.montserrat_regular, FontWeight.Normal))
-val RalewayFamily = FontFamily(Font(R.font.raleway_regular, FontWeight.Normal))
+private fun safeFontFamily(loader: () -> FontFamily): FontFamily {
+    return try {
+        loader()
+    } catch (e: Exception) {
+        FontFamily.Default
+    }
+}
 
-fun resolveFontFamily(fontPref: String): FontFamily = when (fontPref) {
-    "roboto"     -> RobotoFamily
-    "lato"       -> LatoFamily
-    "opensans"   -> OpenSansFamily
-    "montserrat" -> MontserratFamily
-    "raleway"    -> RalewayFamily
-    else         -> FontFamily.Default
+val RobotoFamily: FontFamily by lazy { safeFontFamily { FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)) } }
+val LatoFamily: FontFamily by lazy { safeFontFamily { FontFamily(Font(R.font.lato_regular, FontWeight.Normal)) } }
+val OpenSansFamily: FontFamily by lazy { safeFontFamily { FontFamily(Font(R.font.opensans_regular, FontWeight.Normal)) } }
+val MontserratFamily: FontFamily by lazy { safeFontFamily { FontFamily(Font(R.font.montserrat_regular, FontWeight.Normal)) } }
+val RalewayFamily: FontFamily by lazy { safeFontFamily { FontFamily(Font(R.font.raleway_regular, FontWeight.Normal)) } }
+
+fun resolveFontFamily(fontPref: String): FontFamily = try {
+    when (fontPref) {
+        "roboto"     -> RobotoFamily
+        "lato"       -> LatoFamily
+        "opensans"   -> OpenSansFamily
+        "montserrat" -> MontserratFamily
+        "raleway"    -> RalewayFamily
+        else         -> FontFamily.Default
+    }
+} catch (e: Exception) {
+    FontFamily.Default
 }
 
 fun resolveFontSize(sizePref: String) = when (sizePref) {
