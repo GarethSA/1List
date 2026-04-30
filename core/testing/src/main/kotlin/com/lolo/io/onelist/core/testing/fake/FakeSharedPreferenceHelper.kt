@@ -20,6 +20,8 @@ class FakeSharedPreferenceHelper : SharedPreferencesHelper {
     private val _selectedListIndexStateFlow = MutableStateFlow(0)
     override val selectedListIndexStateFlow: StateFlow<Int>
         get() = _selectedListIndexStateFlow.asStateFlow()
+    override var fontSize: String = "medium"
+    override var fontFamily: String = "default"
     override var canAccessBackupUri: Boolean = true
     private set // bc interface is a val
 
