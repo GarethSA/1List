@@ -17,6 +17,19 @@ interface SharedPreferencesHelper {
         const val THEME_LIGHT = "light"
         const val THEME_DARK = "dark"
         const val THEME_DYNAMIC = "dynamic"
+
+        const val FONT_SIZE_PREF = "fontSize"
+        const val FONT_SIZE_SMALL = "small"
+        const val FONT_SIZE_MEDIUM = "medium"
+        const val FONT_SIZE_LARGE = "large"
+
+        const val FONT_FAMILY_PREF = "fontFamily"
+        const val FONT_FAMILY_DEFAULT = "default"
+        const val FONT_FAMILY_ROBOTO = "roboto"
+        const val FONT_FAMILY_LATO = "lato"
+        const val FONT_FAMILY_OPENSANS = "opensans"
+        const val FONT_FAMILY_MONTSERRAT = "montserrat"
+        const val FONT_FAMILY_RALEWAY = "raleway"
     }
 
     var backupDisplayPath: String?
@@ -28,4 +41,6 @@ interface SharedPreferencesHelper {
     var selectedListIndex: Int
     val selectedListIndexStateFlow: StateFlow<Int>
     val canAccessBackupUri: Boolean
+    var fontSize: String
+    var fontFamily: String
 }
