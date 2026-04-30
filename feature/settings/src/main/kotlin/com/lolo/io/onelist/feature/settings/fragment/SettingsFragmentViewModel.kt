@@ -55,4 +55,12 @@ class SettingsFragmentViewModel(
 
     val syncFolderNotAccessible
         get() = !preferences.canAccessBackupUri
+
+    fun updateFontSize(value: String) {
+        preferences.fontSize = value
+    }
+
+    fun updateFontFamily(value: String) {
+        preferences.fontFamily = value
+    }
 }
