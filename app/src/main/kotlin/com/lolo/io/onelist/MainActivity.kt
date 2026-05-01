@@ -15,19 +15,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.lolo.io.onelist.core.designsystem.resolveFontFamily
-import com.lolo.io.onelist.core.designsystem.resolveFontSize
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.lolo.io.onelist.core.data.updates.UpdateHelper
 import com.lolo.io.onelist.core.data.repository.OneListRepository
 import com.lolo.io.onelist.core.data.shared_preferences.SharedPreferencesHelper
 import com.lolo.io.onelist.core.designsystem.OneListTheme
+import com.lolo.io.onelist.core.designsystem.resolveFontFamily
+import com.lolo.io.onelist.core.designsystem.resolveFontSize
 import com.lolo.io.onelist.feature.lists.navigation.LISTS_SCREEN_ROUTE
 import com.lolo.io.onelist.feature.whatsnew.navigation.navigateToWhatsNewScreen
 import com.lolo.io.onelist.navigation.OneListNavHost
@@ -76,18 +74,13 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
+        // Resolve font once at startup - recreate() will re-run this on font change
+        val fontFamily: FontFamily = resolveFontFamily(sharedPreferencesHelper.fontFamily)
+        val fontSize: Float = resolveFontSize(sharedPreferencesHelper.fontSize).value
+
         setContent {
             val navController = rememberNavController()
             val showWhatsNew = viewModel.showWhatsNew.collectAsStateWithLifecycle().value
-            val currentFontSizePref = sharedPreferencesHelper.fontSizeStateFlow.collectAsStateWithLifecycle().value
-            val currentFontFamilyPref = sharedPreferencesHelper.fontFamilyStateFlow.collectAsStateWithLifecycle().value
-
-            val currentFontFamily = remember(currentFontFamilyPref) {
-                resolveFontFamily(currentFontFamilyPref)
-            }
-            val currentFontSize = remember(currentFontSizePref) {
-                resolveFontSize(currentFontSizePref).value
-            }
 
             KoinAndroidContext {
 
@@ -99,8 +92,8 @@ class MainActivity : AppCompatActivity() {
 
                 OneListTheme(
                     isDynamic = sharedPreferencesHelper.theme == SharedPreferencesHelper.THEME_DYNAMIC,
-                    fontFamily = currentFontFamily,
-                    fontSize = currentFontSize
+                    fontFamily = fontFamily,
+                    fontSize = fontSize
                 ) {
                     Surface(modifier = Modifier.fillMaxSize()) {
                         Surface(
@@ -124,7 +117,6 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.onBackPressed()
         return true
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
