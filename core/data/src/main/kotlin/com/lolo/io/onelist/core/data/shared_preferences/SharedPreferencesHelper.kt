@@ -43,6 +43,4 @@ interface SharedPreferencesHelper {
     val canAccessBackupUri: Boolean
     var fontSize: String
     var fontFamily: String
-    val fontSizeStateFlow: StateFlow<String>
-    val fontFamilyStateFlow: StateFlow<String>
 }
