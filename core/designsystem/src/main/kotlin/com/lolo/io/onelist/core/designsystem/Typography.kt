@@ -4,24 +4,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 
-fun resolveFontFamily(fontPref: String): FontFamily = try {
-    when (fontPref) {
-        "roboto"     -> FontFamily(Font(R.font.roboto_regular, FontWeight.Normal))
-        "lato"       -> FontFamily(Font(R.font.lato_regular, FontWeight.Normal))
-        "opensans"   -> FontFamily(Font(R.font.opensans_regular, FontWeight.Normal))
-        "montserrat" -> FontFamily(Font(R.font.montserrat_regular, FontWeight.Normal))
-        "raleway"    -> FontFamily(Font(R.font.raleway_regular, FontWeight.Normal))
-        else         -> FontFamily.Default
-    }
-} catch (e: Exception) {
-    FontFamily.Default
+fun resolveFontFamily(fontPref: String): FontFamily = when (fontPref) {
+    "roboto"     -> FontFamily.SansSerif
+    "lato"       -> FontFamily.SansSerif
+    "opensans"   -> FontFamily.SansSerif
+    "montserrat" -> FontFamily.SansSerif
+    "raleway"    -> FontFamily.Serif
+    "serif"      -> FontFamily.Serif
+    "mono"       -> FontFamily.Monospace
+    "cursive"    -> FontFamily.Cursive
+    else         -> FontFamily.Default
 }
 
 fun resolveFontSize(sizePref: String) = when (sizePref) {
