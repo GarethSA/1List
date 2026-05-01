@@ -7,6 +7,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import com.lolo.io.onelist.core.designsystem.colors.darkColorScheme
 import com.lolo.io.onelist.core.designsystem.colors.lightColorScheme
 
@@ -14,8 +15,8 @@ import com.lolo.io.onelist.core.designsystem.colors.lightColorScheme
 fun OneListTheme(
     isDynamic: Boolean = false,
     isDark: Boolean = isSystemInDarkTheme(),
-    fontSizePref: String = "medium",
-    fontFamilyPref: String = "default",
+    fontFamily: FontFamily = FontFamily.Default,
+    fontSize: Float = 16f,
     content: @Composable () -> Unit
 ) {
     val colorScheme =
@@ -25,9 +26,6 @@ fun OneListTheme(
         } else {
             if (isDark) darkColorScheme() else lightColorScheme()
         }
-
-    val fontFamily = resolveFontFamily(fontFamilyPref)
-    val fontSize = resolveFontSize(fontSizePref).value
 
     MaterialTheme(
         colorScheme = colorScheme,
