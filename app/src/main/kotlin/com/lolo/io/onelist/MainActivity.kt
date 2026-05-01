@@ -15,8 +15,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.lolo.io.onelist.core.designsystem.resolveFontFamily
+import com.lolo.io.onelist.core.designsystem.resolveFontSize
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.anggrayudi.storage.SimpleStorageHelper
@@ -75,8 +79,15 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val navController = rememberNavController()
             val showWhatsNew = viewModel.showWhatsNew.collectAsStateWithLifecycle().value
-            val currentFontSize = sharedPreferencesHelper.fontSizeStateFlow.collectAsStateWithLifecycle().value
-            val currentFontFamily = sharedPreferencesHelper.fontFamilyStateFlow.collectAsStateWithLifecycle().value
+            val currentFontSizePref = sharedPreferencesHelper.fontSizeStateFlow.collectAsStateWithLifecycle().value
+            val currentFontFamilyPref = sharedPreferencesHelper.fontFamilyStateFlow.collectAsStateWithLifecycle().value
+
+            val currentFontFamily = remember(currentFontFamilyPref) {
+                resolveFontFamily(currentFontFamilyPref)
+            }
+            val currentFontSize = remember(currentFontSizePref) {
+                resolveFontSize(currentFontSizePref).value
+            }
 
             KoinAndroidContext {
 
@@ -88,8 +99,8 @@ class MainActivity : AppCompatActivity() {
 
                 OneListTheme(
                     isDynamic = sharedPreferencesHelper.theme == SharedPreferencesHelper.THEME_DYNAMIC,
-                    fontSizePref = currentFontSize,
-                    fontFamilyPref = currentFontFamily
+                    fontFamily = currentFontFamily,
+                    fontSize = currentFontSize
                 ) {
                     Surface(modifier = Modifier.fillMaxSize()) {
                         Surface(
