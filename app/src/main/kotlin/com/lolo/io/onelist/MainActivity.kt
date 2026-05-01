@@ -75,6 +75,8 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val navController = rememberNavController()
             val showWhatsNew = viewModel.showWhatsNew.collectAsStateWithLifecycle().value
+            val currentFontSize = sharedPreferencesHelper.fontSizeStateFlow.collectAsStateWithLifecycle().value
+            val currentFontFamily = sharedPreferencesHelper.fontFamilyStateFlow.collectAsStateWithLifecycle().value
 
             KoinAndroidContext {
 
@@ -83,9 +85,6 @@ class MainActivity : AppCompatActivity() {
                         navController.navigateToWhatsNewScreen()
                     }
                 }
-
-                val currentFontSize = sharedPreferencesHelper.fontSizeStateFlow.collectAsStateWithLifecycle().value
-                val currentFontFamily = sharedPreferencesHelper.fontFamilyStateFlow.collectAsStateWithLifecycle().value
 
                 OneListTheme(
                     isDynamic = sharedPreferencesHelper.theme == SharedPreferencesHelper.THEME_DYNAMIC,
