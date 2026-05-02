@@ -117,10 +117,9 @@ fun ItemUI(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(horizontal = MaterialTheme.space.Small)
-                                .padding(vertical = MaterialTheme.space.Tiny)
+                                .padding(vertical = 1.dp)
                                 .heightIn(MaterialTheme.dimen.listItemMinHeight)
                                 .alignByBaseline()
-                                .padding(vertical = MaterialTheme.space.Tiny)
                                 .wrapContentHeight(align = Alignment.CenterVertically)
                                 .testTag(TestTags.ItemUiTitle),
                         )
