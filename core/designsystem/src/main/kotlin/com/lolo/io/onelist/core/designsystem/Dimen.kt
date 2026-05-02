@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 
 object Dimen {
-    val listItemMinHeight = 48.dp
+    val listItemMinHeight = 20.dp
 }
 
 val MaterialTheme.dimen: Dimen
