@@ -131,8 +131,8 @@ fun appColors(
     textFieldBackgroundNoBorder = Color.Transparent,
     itemRowBackground = MaterialTheme.colorScheme.surface,
     swipeIcons = MaterialTheme.colorScheme.onPrimary,
-    swipeDeleteText = MaterialTheme.colorScheme.tertiary,
-    swipeDeleteProgressBackground = MaterialTheme.colorScheme.tertiary,
+    swipeDeleteText = Palette.PURE_WHITE,
+    swipeDeleteProgressBackground = Palette.SURFACE_BLACK,
     textFieldColors = TextFieldDefaults.colors(
         focusedContainerColor = MaterialTheme.colorScheme.background,
         unfocusedContainerColor = MaterialTheme.colorScheme.background,
