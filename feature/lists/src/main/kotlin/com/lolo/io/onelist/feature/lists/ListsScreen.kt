@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import kotlin.math.roundToInt
 
-const val DELETE_ANIMATION_DURATION = 800L
+const val DELETE_ANIMATION_DURATION = 80L
 
 @Composable
 fun ListsScreen(
@@ -256,7 +256,7 @@ internal fun ListsScreenUI(
                 Log.d("ANIM", "onItemSwipedToStart")
                 if (deleteItemJobs[it.id] == null) {
                     deleteItemJobs[it.id] = coroutineScope.launch {
-                        delay(DELETE_ANIMATION_DURATION + 500)
+                        delay(DELETE_ANIMATION_DURATION + 20)
                         if (deleteItemJobs[it.id] != null) {
                             Log.d("ANIM", "onItemSwipedToStart")
                             actions.removeItem(it)
