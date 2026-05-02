@@ -23,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -36,8 +37,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -56,21 +60,32 @@ internal fun AddItemInput(
     modifier: Modifier = Modifier,
 ) {
     val view = LocalView.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
 
     var value by remember { mutableStateOf("") }
     var commentValue by remember { mutableStateOf("") }
     var fieldResetKey by remember { mutableIntStateOf(0) }
+    var requestFocusAfterReset by remember { mutableStateOf(false) }
 
-    // Always reflects the latest value in callbacks, avoiding stale closure captures
     val currentValue by rememberUpdatedState(value)
     val currentComment by rememberUpdatedState(commentValue)
     val currentOnSubmit by rememberUpdatedState(onSubmit)
+
+    // After field resets, re-request focus so keyboard stays up
+    LaunchedEffect(fieldResetKey) {
+        if (requestFocusAfterReset) {
+            kotlinx.coroutines.delay(50)
+            focusRequester.requestFocus()
+            keyboardController?.show()
+            requestFocusAfterReset = false
+        }
+    }
 
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
         val iconsAnimationDuration = 300
         var showCommentInput by remember { mutableStateOf(false) }
 
@@ -84,6 +99,7 @@ internal fun AddItemInput(
             OneListTextField(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .focusRequester(focusRequester)
                     .testTag(TestTags.AddItemInput),
                 value = value,
                 placeholder = stringResource(R.string.add_item_placeholder),
@@ -98,6 +114,7 @@ internal fun AddItemInput(
                         val comment = currentComment
                         value = ""
                         commentValue = ""
+                        requestFocusAfterReset = true
                         fieldResetKey++
                         currentOnSubmit(title, comment)
                     }
@@ -115,6 +132,7 @@ internal fun AddItemInput(
                                     val comment = currentComment
                                     value = ""
                                     commentValue = ""
+                                    requestFocusAfterReset = true
                                     fieldResetKey++
                                     currentOnSubmit(title, comment)
                                 }
